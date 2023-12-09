@@ -10,6 +10,16 @@ class Password extends FormzInput<String, PasswordError> {
   // Call super.dirty to represent a modified form input.
   const Password.dirty(String value) : super.dirty(value);
 
+  //> Hacemos un getter para obtener el mensaje de error si existe uno
+  String? get errorMessage {
+    if( isValid || isPure) return null;
+
+    if (displayError == PasswordError.empty) return 'El campo es requerido';
+    if (displayError == PasswordError.length) return 'Mínimo 6 caracteres';
+
+    return null;
+  }
+
   // Override validator to handle validating a given input value.
   @override
   PasswordError? validator(String value) {
