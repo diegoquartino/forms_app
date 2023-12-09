@@ -7,7 +7,16 @@ part 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterFormState> {
   RegisterCubit() : super(const RegisterFormState());
- 
+  
+  List<FormzInput<dynamic, dynamic>> getListInputsToValidate() {
+    final List<FormzInput<dynamic, dynamic>> inputs = [
+      state.username,
+      state.password,
+      state.email
+    ];
+    return inputs;
+  }
+
   void onSubmit() {
     emit(
       state.copyWith(
@@ -15,13 +24,14 @@ class RegisterCubit extends Cubit<RegisterFormState> {
         username: UserName.dirty(state.username.value),
         password: Password.dirty(state.password.value),
         email: Email.dirty(state.email.value),
-        // isValid: Formz.validate([
-        //   state.username,
-        //   state.password,
-        //   state.email
-        // ]),
+        isValid: Formz.validate(getListInputsToValidate()),
       ),
-    );
+    );  
+    
+    if (!state.isValid) return;  
+
+    print("Realizo lo necesario si las validaciones son correctas");
+    
   }
 
   void usernameChanged(String value) {
@@ -29,11 +39,7 @@ class RegisterCubit extends Cubit<RegisterFormState> {
     emit(
       state.copyWith(
         username: username,
-        isValid: Formz.validate([
-          username,
-          state.password,
-          state.email
-        ]),
+        isValid: Formz.validate(getListInputsToValidate()),
       ),
     );
   }
@@ -43,11 +49,7 @@ class RegisterCubit extends Cubit<RegisterFormState> {
     emit(
       state.copyWith(
         email: email,
-        isValid: Formz.validate([
-          state.username,
-          state.password,
-          email
-        ]),
+        isValid: Formz.validate(getListInputsToValidate()),
       ),
     );
   }
@@ -57,11 +59,7 @@ class RegisterCubit extends Cubit<RegisterFormState> {
     emit(
       state.copyWith(
         password: password,
-        isValid: Formz.validate([
-          state.username,
-          password,
-          state.email
-        ]),
+        isValid: Formz.validate(getListInputsToValidate()),
       ),
     );
   }
